@@ -1,91 +1,46 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.util.Formatter;
 import java.util.Scanner;
-
 public class Main {
-    static final String FILE_DICTIONARY = "Dicionario.txt";
-    static final String FILE_PAPER = "Artigo.txt";
-    static final String FILE_ERROR_WORDS = "Erros.txt";
-
     public static void main(String[] args) throws FileNotFoundException {
-        String[] dictionary = getDictionaryFromFile(FILE_DICTIONARY);
-        checkErrors(FILE_PAPER, FILE_ERROR_WORDS, dictionary);
-        System.out.printf("Diferencas=%.1f%% %n",
-                getPercentageDiference(FILE_PAPER, FILE_ERROR_WORDS));
-    }
+        //chamar metodo para escrever no arquivo
+        escrever();
 
-    private static String[] getDictionaryFromFile(String fileDictionary)
-            throws FileNotFoundException {
-        String[] result = new String[getNumberOfWordsFromFile(fileDictionary)];
-        Scanner in = new Scanner(new File(fileDictionary));
-        for (int i = 0; i < result.length; i++) {
-            result[i] = in.next();
+        //chamar metodo para ler o arquivo
+        leituraEMostrar ();
+
+    }
+    public static void leituraEMostrar () throws FileNotFoundException {
+        //Abrir o arquivo dados.txt para leitura
+        Scanner in =new Scanner(new File("dados.txt"));
+
+        //cria a string linha que vai ler cada linha existente
+        String linha=in.nextLine();
+
+        //vai mostrar a linha lida
+        while (in.hasNextLine()){
+            linha=in.nextLine();
+            System.out.println(linha);
         }
+
+        //Fechar o arquivo
         in.close();
-        return result;
     }
+    public static void escrever () throws FileNotFoundException {
+        //Abrir o ficheiro dados.txt para escrita
+        Formatter output = new Formatter(new File("dados.txt"));
+                //Escrever no ficheiro
+        output.format("%s%n", "  ");
+        output.format("%s%n", "A UC de Programação I tem com objetivos:");
+        output.format("%s%n", "- Conceção de algoritmos aplicando boas práticas de programação;");
+        output.format("%s%n", "- Codificação de algoritmos em linguagem Java (na perspetiva procedimental);");
+        output.format("%s%n", "- Aplicação de testes aos programas;");
+        output.format("%s%n", "- Aplicação dos conhecimentos adquiridos à resolução de problemas do mundo real;");
+        output.format("%s%n", "- Promoção de atitudes de aprendizagem ativa, colaborativa e responsável, de trabalho persistente e");
+        output.format("%s%n", "  de aplicação de espírito crítico na análise e resolução de problemas.");
 
-    private static int getNumberOfWordsFromFile(String fileDictionary)
-            throws FileNotFoundException {
-        int result = 0;
-        Scanner in = new Scanner(new File(fileDictionary));
-        while (in.hasNext()) {
-            in.next();
-            result++;
-        }
-        in.close();
-        return result;
-    }
-
-    private static void checkErrors(String filePaper, String fileErrors, String[] dictionary)
-            throws FileNotFoundException {
-        Scanner in = new Scanner(new File(filePaper));
-        PrintWriter out = new PrintWriter(new File(fileErrors));
-        while (in.hasNext()) {
-            String word = in.next();
-            if (!isWord(dictionary, word))
-                out.println(word);
-        }
-        in.close();
-        out.close();
-    }
-
-    private static boolean isWord(String[] dictionary, String word) {
-        int i = 0;
-        boolean inDictionary = false;
-        while ((i < dictionary.length) && (!inDictionary)) {
-            if (dictionary[i].equalsIgnoreCase(word))
-                inDictionary = true;
-            i++;
-        }
-        return inDictionary;
-    }
-
-    private static double getPercentageDiference(String filePaper, String fileErrorWords) throws FileNotFoundException {
-// Contar o número total de palavras no artigo
-        int totalWordsInPaper = countWordsInFile(filePaper);
-
-        // Contar o número de palavras erradas no arquivo de erros
-        int totalErrors = countWordsInFile(fileErrorWords);
-
-        // Evitar divisão por zero se não houver palavras no artigo
-        if (totalWordsInPaper == 0) {
-            return 0.0;
-        }
-
-        // Calcular a percentagem de palavras erradas
-        return (totalErrors / (double) totalWordsInPaper) * 100;
-    }
-
-    private static int countWordsInFile(String filename) throws FileNotFoundException {
-        int wordCount = 0;
-        Scanner in = new Scanner(new File(filename));
-        while (in.hasNext()) {
-            in.next();
-            wordCount++;
-        }
-        in.close();
-        return wordCount;
+        //Fechar ficheiro
+        output.close();
     }
 }
